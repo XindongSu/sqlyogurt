@@ -517,10 +517,10 @@ void GetVersionInfoforAutoComplete(MYSQL *mysql, wyString &VersionS)
 	char *dbString = mysql_get_server_info(mysql);
 	if(strstr(dbString, "MariaDB")) ///if its mariadb,check if the version is above 10.2
 	{
-		if(me >= 100200) 
+		if(me >= 100200 && me < 100300)
 			me = 50713;///if mariadb version is > 10.2 it supports JSON, hence include functions till mysql version 5.7.13
-		else
-			me = 50066;///if mariadb version is < 10.2, include functions only for previous versons of mysql.		
+		else if(me < 100200)
+			me = 50300;///if mariadb version is < 10.2, include functions only for previous versons of mysql.		
 	}
 	
  	VersionS.Sprintf("%ld", me);
@@ -571,6 +571,43 @@ wyBool IsMariaDB100502(Tunnel * tunnel, PMYSQL mysql)
 	const char *dbString = mysql_get_server_info(*mysql);
 
 	if (me >= 100502 && strstr(dbString, "MariaDB"))
+		return wyTrue;
+	else
+		return wyFalse;
+}
+
+
+// Check the version of MariaDB for 10.10.0 and above
+wyBool IsMariaDB101000(Tunnel * tunnel, PMYSQL mysql)
+{
+	long me = mysql_get_server_version(*mysql);
+	const char *dbString = mysql_get_server_info(*mysql);
+	
+	if (me >= 101000 && strstr(dbString, "MariaDB"))
+		return wyTrue;
+	else
+		return wyFalse;
+}
+
+// Check the version of MariaDB for 10.5.0 and above
+wyBool IsMariaDB100500(Tunnel * tunnel, PMYSQL mysql)
+{
+	long me = mysql_get_server_version(*mysql);
+	const char *dbString = mysql_get_server_info(*mysql);
+	
+	if (me >= 100500 && strstr(dbString, "MariaDB"))
+		return wyTrue;
+	else
+		return wyFalse;
+}
+
+// Check the version of MariaDB for 10.7.0 and above
+wyBool IsMariaDB100700(Tunnel * tunnel, PMYSQL mysql)
+{
+	long me = mysql_get_server_version(*mysql);
+	const char *dbString = mysql_get_server_info(*mysql);
+
+	if (me >= 100700 && strstr(dbString, "MariaDB"))
 		return wyTrue;
 	else
 		return wyFalse;
